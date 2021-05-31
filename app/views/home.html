@@ -1,0 +1,90 @@
+
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+<style>
+  .govuk-error-message{
+    display: none;
+  }
+  .govuk-form-group--error{
+    border-left: none;
+    padding-left:0;
+  }
+  .govuk-error-summary{
+    display: none;
+  }
+</style>
+<script>
+  function submitForm() {
+    const btns = document.querySelectorAll('.govuk-radios__input');
+    if(!btns[0].checked && !btns[1].checked){
+      document.querySelector('.govuk-error-message').style.display = "block";
+      document.querySelector('.govuk-error-summary').style.display = "block";
+      document.querySelector('.govuk-form-group--error').style['border-left'] = "5px solid #d4351c";
+      document.querySelector('.govuk-form-group--error').style['padding-left'] = "15px";
+      return false;
+    } else  {
+        return true;
+    }
+   
+  }
+  </script>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{{ govukErrorSummary({
+  titleText: "There is a problem",
+  errorList: [
+    {
+      text: "Select 'Freehold' or 'Leasehold'",
+      href: "#Freehold-or-Leasehold-error"
+    }
+  ]
+}) }}
+      <form class="form" action="/result-1" method="post" onsubmit="submitForm()">
+
+        {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{{ govukRadios({
+  classes: "govuk-radios--inline",
+  idPrefix: "Freehold-or-Leasehold",
+  name: "Freehold-or-Leasehold",
+  fieldset: {
+    legend: {
+      text: "Is your transcation freehold or leasehold?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  errorMessage: {
+    text: "Select 'Freehold' or 'Leasehold'"
+  },
+  items: [
+    {
+      value: "Freehold",
+      text: "Freehold",
+      checked: checked("Freehold-or-Leasehold","Freehold")
+    },
+    {
+      value: "Leasehold",
+      text: "Leasehold",
+      checked: checked("Freehold-or-Leasehold","Leasehold")
+    }
+    
+  ],
+  hint: {
+    text: "Choose 'Freehold' if it's a freehold transaction or you're acquiring an existing lease. Choose 'Leasehold' if it's a new lease."
+  }
+}) }}      <button class="govuk-button" data-module="govuk-button">Continue</button>
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}
